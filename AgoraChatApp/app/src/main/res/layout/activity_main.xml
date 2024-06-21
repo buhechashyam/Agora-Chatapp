@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".one2onechat.MainActivity">
+
+    <com.google.android.material.button.MaterialButton
+        app:cornerRadius="8dp"
+        android:id="@+id/btnJoinLeave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:onClick="joinLeave"
+        android:text="Join" />
+
+    <EditText
+        android:id="@+id/etRecipient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/btnJoinLeave"
+        android:layout_alignTop="@id/btnJoinLeave"
+        android:layout_toStartOf="@id/btnJoinLeave"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        android:background="#FFFFFF"
+        android:hint="Enter recipient user ID" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btnSendMessage"
+        android:layout_below="@id/etRecipient"
+        android:background="#ECE5DD">
+
+        <LinearLayout
+            android:id="@+id/chats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
+    </ScrollView>
+
+    <EditText
+        android:id="@+id/etMessageText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/btnSendMessage"
+        android:layout_alignBottom="@id/btnSendMessage"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        android:background="#FFFFFF"
+        android:hint="Message" />
+
+    <com.google.android.material.button.MaterialButton
+        app:cornerRadius="8dp"
+        android:id="@+id/btnSendMessage"
+        android:layout_width="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:onClick="sendMessage"
+        android:text="send" />
+</RelativeLayout>
