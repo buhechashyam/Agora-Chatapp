@@ -8,7 +8,7 @@
     android:layout_margin="16dp"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".chatgroup.AddUserActivity">
+    tools:context=".chatgroup.using_dashboard.GroupChatActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

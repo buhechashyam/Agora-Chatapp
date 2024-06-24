@@ -1,4 +1,4 @@
-package com.example.agorachatapp.one2onechat;
+package com.example.agorachatapp.one2onechat.using_dashboard;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -27,8 +27,8 @@ import io.agora.chat.ChatOptions;
 import io.agora.chat.TextMessageBody;
 
 public class MainActivity extends AppCompatActivity {
-    private String userId = "user3";
-    private String token = "007eJxTYHgoYj9XJtu2q+vSoYU/in8UhfqI5cyNZOBvCrT9fcljUqcCg3GqhYVxclKSqZGZhYlpUpqlQaJhWmJyWmJiimFyWmrKvc3FaQ2BjAwOSXOZGRlYGRiBEMRXYTBMNDK1SDEz0DVKTUrRNTRMTdO1MDA317VMsjAwtjA2tkwxMAQAkrUnlQ==";
+    private String userId = "user10";
+    private String token = "007eJxTYFDafNDq15J/GfvPOEziZsrgLN4xpSbs8Cylna9nTnxfeaFYgcE41cLCODkpydTIzMLENCnN0iDRMC0xOS0xMcUwOS01pUOmMq0hkJEh5lwFIyMDKwMjEIL4KgzJBmmGFompBrpGaclmuoaGqWm6FsYplrpmhkZmKRZGBqZJyUkAXjgp5g==";
     private String appKey = "611166664#1353835";
     ActivityMainBinding binding;
     ChatClient chatClient;

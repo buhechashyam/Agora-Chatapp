@@ -1,21 +1,22 @@
-package com.example.agorachatapp.chatgroup;
+package com.example.agorachatapp.chatgroup.using_dashboard;
 
 import static android.os.AsyncTask.execute;
-import static io.agora.cloud.HttpClientManager.Method_GET;
 import static io.agora.cloud.HttpClientManager.Method_POST;
 
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.agorachatapp.databinding.ActivityAddUserBinding;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import com.example.agorachatapp.databinding.ActivityGroupChatsBinding;
+import com.example.agorachatapp.viewmodel.MainViewModel;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,25 +25,29 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatOptions;
 import io.agora.cloud.HttpClientManager;
 import io.agora.cloud.HttpResponse;
-import okhttp3.OkHttp;
-import okhttp3.OkHttpClient;
 
-public class AddUserActivity extends AppCompatActivity {
+public class GroupChatActivity extends AppCompatActivity {
 
-    ActivityAddUserBinding binding;
-    String appKey = "611166664#1353835";
+    ActivityGroupChatsBinding binding;
+
     //Chat App Temp Token
-    String appToken = "007eJxTYHh244f2mvTGs7GSHQGm31VZGB8/fRR+50tO2N+M/ZN1ndsUGIxTLSyMk5OSTI3MLExMk9IsDRIN0xKT0xITUwyT01JT9JNL0xoCGRlOJzkzMTKwMjAyMDGA+AwMACSYH88=";
+    String appToken = "007eJxTYKiL/jUl6pVGY7bDAyudCIHdfLlcr0NaFjtMOx1s4vt2/zoFBuNUCwvj5KQkUyMzCxPTpDRLg0TDtMTktMTEFMPktNQUZqbKtIZARoZw1Z0MjAysQMzEAOIzMAAAa6kdBQ==";
     ChatClient chatClient;
+    String appKey = "611166664#1353835";
     String REGISTER_URL = "https://a61.chat.agora.io/611166664/1353835/users";
-    String LOGIN_URL = "https://a61.chat.agora.io/611166664/1353835/users";
+
+    MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityAddUserBinding.inflate(getLayoutInflater());
+        binding = ActivityGroupChatsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        String username = getIntent().getStringExtra("username");
 
         setUpClient();
 
@@ -54,6 +59,24 @@ public class AddUserActivity extends AppCompatActivity {
         binding.btnSignin.setOnClickListener(v -> signIn());
         //Logout
         binding.btnSignout.setOnClickListener(v -> signOut());
+
+        binding.btnSendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                viewModel.sendOneToOneMessage(appToken,username,"user1",binding.etMessage.getText().toString().trim()).observe(GroupChatActivity.this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean aBoolean) {
+                        if (aBoolean) {
+                            showToast("SEND");
+                        } else {
+                            showToast("Not SEND");
+                        }
+                    }
+                });
+
+            }
+        });
     }
 
     public void signUp() {
@@ -72,7 +95,6 @@ public class AddUserActivity extends AppCompatActivity {
                 JSONObject request = new JSONObject();
                 request.putOpt("username", username);
                 request.putOpt("password", pwd);
-
 
                 HttpResponse response = HttpClientManager.httpExecute(REGISTER_URL, headers, request.toString(), Method_POST);
                 int code = response.code;

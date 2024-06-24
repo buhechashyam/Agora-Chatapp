@@ -1,4 +1,4 @@
-package com.example.agorachatapp.one2onechat;
+package com.example.agorachatapp.one2onechat.using_dashboard;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -32,9 +32,9 @@ public class ChatActivity extends AppCompatActivity {
     ActivityChatBinding binding;
 
     //for user1
-    String userId = "user1";  //User ID
+    String userId = "user10";  //User ID
     //Chat User Temp Token:
-    String token = "007eJxTYDgaXnwxYMeaCVy5yUr/Q9uSPzs6rBVbtvLb5TBpjnUXcx8oMBinWlgYJyclmRqZWZiYJqVZGiQapiUmpyUmphgmp6Wm3DIpTWsIZGQwUfVgYWRgZWAEQhBfhcEk2cTANNXIQNco1chQ19AwNU3X0tLSTDfN0tTMMCXRMMnIwhIA3jkn1Q==";
+    String token = "007eJxTYFDafNDq15J/GfvPOEziZsrgLN4xpSbs8Cylna9nTnxfeaFYgcE41cLCODkpydTIzMLENCnN0iDRMC0xOS0xMcUwOS01pUOmMq0hkJEh5lwFIyMDKwMjEIL4KgzJBmmGFompBrpGaclmuoaGqWm6FsYplrpmhkZmKRZGBqZJyUkAXjgp5g==";
 
     String appKey = "611166664#1353835";
     private ChatClient agoraChatClient;
@@ -77,7 +77,7 @@ public class ChatActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run(){
-                        displayMessage(message, convertToTime(chatMessage.getMsgTime()), true);
+                        displayMessage(message, convertToTime(chatMessage.getMsgTime()), userId,true);
                         binding.etMessage.setText("");
                         showLog("Message Send");
                     }
@@ -166,7 +166,7 @@ public class ChatActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            displayMessage(((TextMessageBody) message.getBody()).getMessage(), convertToTime(message.getMsgTime()), false);
+                            displayMessage(((TextMessageBody) message.getBody()).getMessage(), convertToTime(message.getMsgTime()),message.conversationId() ,false);
 
                         }
                     });
@@ -207,7 +207,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void displayMessage(String textMessage, String textMessageTime, boolean isSendMessage) {
+    private void displayMessage(String textMessage, String textMessageTime,String textSender ,boolean isSendMessage) {
         //create a textview to set a message
         TextView textView = new TextView(this);
         textView.setText(textMessage);
@@ -220,7 +220,9 @@ public class ChatActivity extends AppCompatActivity {
 
         TextView msg = view.findViewById(R.id.text_message);
         TextView msgTime = view.findViewById(R.id.text_msg_time);
+        TextView sender = view.findViewById(R.id.text_sender);
 
+        sender.setText(textSender);
         msg.setText(textMessage);
         msgTime.setText(textMessageTime);
         if (isSendMessage) {

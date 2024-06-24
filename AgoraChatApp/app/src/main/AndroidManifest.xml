@@ -7,14 +7,16 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- For Android 12, you need to add the following line to apply for the alarm clock permission. For Agora Chat 1.0.9 or later, this permission is optional.-->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
@@ -29,19 +31,25 @@
         android:theme="@style/Theme.AgoraChatApp"
         tools:targetApi="31">
         <activity
-            android:name=".chatgroup.ChatGroupActivity"
+            android:name=".chatgroup.using_dashboard.ChatGroupActivity"
             android:exported="false" />
         <activity
-            android:name=".SampleActivity"
+            android:name=".chatgroup.using_dashboard.GroupChatActivity"
             android:exported="false" />
         <activity
-            android:name=".one2onechat.ChatActivity"
+            android:name=".chatgroup.using_restapi.GroupChatActivity"
             android:exported="false" />
         <activity
-            android:name=".one2onechat.MainActivity"
+            android:name=".one2onechat.using_restapi.One2OneChatActivity"
             android:exported="false" />
         <activity
-            android:name=".chatgroup.AddUserActivity"
+            android:name=".one2onechat.using_dashboard.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".one2onechat.using_dashboard.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,14 +57,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver
-            android:name=".one2onechat.MessageReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.agorachatapp.ACTION_MESSAGE_RECEIVE" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

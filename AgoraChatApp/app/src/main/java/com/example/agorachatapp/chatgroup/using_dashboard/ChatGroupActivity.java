@@ -1,4 +1,4 @@
-package com.example.agorachatapp.chatgroup;
+package com.example.agorachatapp.chatgroup.using_dashboard;
 
 import android.os.Bundle;
 import android.util.Log;
