@@ -16,8 +16,7 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!-- For Android 12, you need to add the following line to apply for the alarm clock permission. For Agora Chat 1.0.9 or later, this permission is optional.-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- For Android 12, you need to add the following line to apply for the alarm clock permission. For Agora Chat 1.0.9 or later, this permission is optional. -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
@@ -30,6 +29,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AgoraChatApp"
         tools:targetApi="31">
+        <activity
+            android:name=".chatgroup.using_restapi.GroupChatDashboard"
+            android:parentActivityName=".AuthActivity"
+            android:exported="false" />
         <activity
             android:name=".chatgroup.using_dashboard.ChatGroupActivity"
             android:exported="false" />

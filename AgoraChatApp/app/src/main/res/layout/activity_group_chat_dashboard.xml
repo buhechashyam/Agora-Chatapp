@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".chatgroup.using_restapi.GroupChatDashboard">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:id="@+id/toolbar"
+        app:title="Group Dashboard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_group_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Group name"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_group_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPersonName" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Group Description"
+        app:layout_constraintEnd_toEndOf="@id/layout_group_name"
+        app:layout_constraintStart_toStartOf="@id/layout_group_name"
+        app:layout_constraintTop_toBottomOf="@id/layout_group_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_group_desc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPersonName" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_create_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/blue"
+        android:text="Create Group"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="@id/layout_desc"
+        app:layout_constraintStart_toStartOf="@id/layout_desc"
+        app:layout_constraintTop_toBottomOf="@id/layout_desc" />
+
+    <TextView
+        android:id="@+id/text_group_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Group Name"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/btn_create_group"
+        app:layout_constraintStart_toStartOf="@id/btn_create_group"
+        app:layout_constraintTop_toBottomOf="@id/btn_create_group" />
+
+
+    <TextView
+        android:id="@+id/text_select_user"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="Select User and Group to Add New Member"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/text_group_name"
+        app:layout_constraintStart_toStartOf="@+id/text_group_name"
+        app:layout_constraintTop_toBottomOf="@+id/text_group_name" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spn_groups"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:spinnerMode="dropdown"
+        android:text="Select Group"
+        app:layout_constraintEnd_toEndOf="@+id/text_select_user"
+        app:layout_constraintStart_toStartOf="@+id/text_select_user"
+        app:layout_constraintTop_toBottomOf="@+id/text_select_user" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spn_users"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:spinnerMode="dropdown"
+        android:text="Select User"
+        app:layout_constraintEnd_toEndOf="@+id/spn_groups"
+        app:layout_constraintStart_toStartOf="@+id/spn_groups"
+        app:layout_constraintTop_toBottomOf="@+id/spn_groups" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_add_member"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/blue"
+        android:text="Add Member to Group"
+        android:textAllCaps="true"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="@id/spn_users"
+        app:layout_constraintStart_toStartOf="@id/spn_users"
+        app:layout_constraintTop_toBottomOf="@id/spn_users" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

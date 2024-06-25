@@ -33,7 +33,7 @@ public class GroupChatActivity extends AppCompatActivity {
     ActivityGroupChatBinding binding;
     String appKey = "611166664#1353835";
     String username = "";
-    String groupId = "251482683277313";
+    String groupId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +45,11 @@ public class GroupChatActivity extends AppCompatActivity {
         setUpClient();
         setUpListener();
 
+        username = getIntent().getStringExtra("username");
+        groupId = getIntent().getStringExtra("groupId");
+
         String groupName = ChatClient.getInstance().groupManager().getGroup(groupId).getGroupName();
         binding.groupName.setText(groupName);
-
-
-        username = getIntent().getStringExtra("username");
 
         binding.btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override

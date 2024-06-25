@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setupChatClient(); // Initialize the ChatClient
-        setupListeners(); // Add event listeners
+        setupChatClient();
+        setupListeners();
 
         binding.btnJoinLeave.setOnClickListener(v -> joinOrLeave());
 
@@ -228,8 +228,4 @@ public class MainActivity extends AppCompatActivity {
 
         return time;
     }
-
-
-
-
 }

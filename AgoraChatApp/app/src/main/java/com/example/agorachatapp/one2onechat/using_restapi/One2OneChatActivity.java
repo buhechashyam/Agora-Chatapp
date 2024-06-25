@@ -41,6 +41,7 @@ public class One2OneChatActivity extends AppCompatActivity {
 
     String appKey = "611166664#1353835";
     String appToken = "007eJxTYOBcsuRf27owZwvR0x+CJvs51PgWz4jifdT0WMIgM7q8JlKBwTjVwsI4OSnJ1MjMwsQ0Kc3SINEwLTE5LTExxTA5LTXlqXxlWkMgI8PfVxNYGRlYGRgZmBhAfAYGAHXlHpo=";
+    String username,pw;
 
     boolean isJoined = true;
     @Override
@@ -54,40 +55,22 @@ public class One2OneChatActivity extends AppCompatActivity {
 
         setUpListener();
 
-        String username = getIntent().getStringExtra("username");
-        String pw = getIntent().getStringExtra("pw");
-        String recipient = binding.etRecipient.getText().toString();
+         username = getIntent().getStringExtra("username");
+         pw = getIntent().getStringExtra("pw");
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         joinUser(username,pw);
 
 
-        binding.btnSendMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String recipient = binding.etRecipient.getText().toString().trim();
-                String msg = binding.etMessageText.getText().toString().trim();
-//                viewModel.sendOneToOneMessage(appToken, username, recipient, msg).observe(One2OneChatActivity.this, new Observer<Boolean>() {
-//                    @Override
-//                    public void onChanged(Boolean isSend) {
-//                        if (isSend) {
-//                            showToast("Message send");
-//                            displayMessage(msg,"",true);
-//                        } else {
-//                            showToast("Message Not Send");
-//                        }
-//                    }
-//                });
-                sendMessage(msg,recipient);
-           
-            }
-        });
+        binding.btnSendMessage.setOnClickListener(v -> sendMessage());
     }
 
-    private void sendMessage(String msg, String recipient) {
+    private void sendMessage() {
 
-        ChatMessage chatMessage = ChatMessage.createTextSendMessage(msg, recipient);
-        chatMessage.setChatType(ChatMessage.ChatType.Chat);
+        String massage = binding.etMessageText.getText().toString().trim();
+        String recipient = binding.etRecipient.getText().toString().trim();
+        ChatMessage chatMessage = ChatMessage.createTextSendMessage(massage, recipient);
+//        chatMessage.setChatType(ChatMessage.ChatType.Chat);
 
         chatMessage.setMessageStatusCallback(new CallBack() {
             @Override
@@ -95,7 +78,7 @@ public class One2OneChatActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run(){
-                        displayMessage(msg, convertToTime(chatMessage.getMsgTime()), true);
+                        displayMessage(massage, convertToTime(chatMessage.getMsgTime()),username, true);
                         binding.etMessageText.setText("");
                         showToast("Message Send");
                     }
@@ -159,8 +142,7 @@ public class One2OneChatActivity extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                           displayMessage(((TextMessageBody) message.getBody()).getMessage(), convertToTime(message.getMsgTime()), false);
-                          //  showToast("RECEIVE" + ((TextMessageBody) message.getBody()).getMessage());
+                           displayMessage(((TextMessageBody) message.getBody()).getMessage(), convertToTime(message.getMsgTime()),message.getFrom(), false);
                         }
                     });
                 }
@@ -200,12 +182,7 @@ public class One2OneChatActivity extends AppCompatActivity {
         });
     }
 
-    private void displayMessage(String textMessage, String textMessageTime, boolean isSendMessage) {
-        //create a textview to set a message
-        TextView textView = new TextView(this);
-        textView.setText(textMessage);
-        textView.setPadding(4, 4, 4, 4);
-
+    private void displayMessage(String textMessage, String textMessageTime, String textSender,boolean isSendMessage) {
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
@@ -213,16 +190,17 @@ public class One2OneChatActivity extends AppCompatActivity {
 
         TextView msg = view.findViewById(R.id.text_message);
         TextView msgTime = view.findViewById(R.id.text_msg_time);
+        TextView sender = view.findViewById(R.id.text_sender);
 
+        sender.setText(textSender);
         msg.setText(textMessage);
         msgTime.setText(textMessageTime);
         if (isSendMessage) {
             params.gravity = Gravity.END;
             params.setMargins(100, 4, 4, 4);
-            textView.setBackgroundColor(Color.YELLOW);
         } else {
             params.setMargins(4, 4, 100, 4);
-            textView.setBackgroundColor(Color.YELLOW);
+
         }
 
         binding.chats.addView(view, params);

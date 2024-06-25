@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:gravity="center"
-    android:layout_marginHorizontal="16dp"
     android:layout_height="match_parent"
+    android:layout_marginHorizontal="16dp"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".AuthActivity">
 
     <TextView
@@ -15,57 +15,78 @@
         android:layout_height="wrap_content"
         android:text="Select Chat Type"
         android:textSize="24sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <RadioGroup
+        android:id="@+id/radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        android:id="@+id/radio_group">
+        android:orientation="horizontal">
 
         <RadioButton
+            android:id="@+id/radio_single_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="One to One chat"
-            android:textStyle="bold"
-            android:checked="true"
-            android:id="@+id/radio_single_chat"/>
+            android:textStyle="bold" />
 
         <RadioButton
+            android:id="@+id/radio_group_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="Chat Group"
-            android:textStyle="bold"
-            android:id="@+id/radio_group_chat"/>
+            android:textStyle="bold" />
     </RadioGroup>
+
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/username"
-
-        android:hint="User ID"/>
-
-    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
+        android:hint="User ID" />
+
+    <EditText
         android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="Password"/>
+        android:hint="Password" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spn_groups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:spinnerMode="dropdown"
+        android:text="Select User" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_create_account"
         android:layout_width="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_height="wrap_content"
-        app:cornerRadius="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/blue"
         android:text="Create account"
-        android:id="@+id/btn_create_account"/>
+        app:cornerRadius="8dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/blue"
         android:text="Login"
-        app:cornerRadius="8dp"/>
+        app:cornerRadius="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_manage_groups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/blue"
+        android:text="Manage Groups"
+        app:cornerRadius="8dp" />
 
 </LinearLayout>

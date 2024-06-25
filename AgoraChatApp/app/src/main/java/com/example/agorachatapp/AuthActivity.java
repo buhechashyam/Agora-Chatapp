@@ -7,18 +7,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.RadioGroup;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.agorachatapp.chatgroup.using_restapi.GroupChatActivity;
+import com.example.agorachatapp.chatgroup.using_restapi.GroupChatDashboard;
 import com.example.agorachatapp.databinding.ActivityAuthBinding;
 import com.example.agorachatapp.one2onechat.using_restapi.One2OneChatActivity;
+import com.example.agorachatapp.viewmodel.GroupViewModel;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.agora.CallBack;
@@ -27,15 +37,18 @@ import io.agora.chat.ChatOptions;
 import io.agora.cloud.HttpClientManager;
 import io.agora.cloud.HttpResponse;
 
-public class AuthActivity extends AppCompatActivity {
+public class AuthActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     ActivityAuthBinding binding;
     private String appKey = "611166664#1353835";
     ChatClient chatClient;
-    String appToken = "007eJxTYKiL/jUl6pVGY7bDAyudCIHdfLlcr0NaFjtMOx1s4vt2/zoFBuNUCwvj5KQkUyMzCxPTpDRLg0TDtMTktMTEFMPktNQUZqbKtIZARoZw1Z0MjAysQMzEAOIzMAAAa6kdBQ==";
+    String appToken = "007eJxTYDhU/qVp47H/Un1bWrWK8t3kdN5eT6gVOVv4eSF7uOLRr6oKDMapFhbGyUlJpkZmFiamSWmWBomGaYnJaYmJKYbJaakpe5Or0hoCGRkWdBoxMzKwMjAyMDGA+AwMAAxHH64=";
     String REGISTER_URL = "https://a61.chat.agora.io/611166664/1353835/users";
-
-    boolean groupChat = false;
+    GroupViewModel viewModel;
+    String selectedGroup;
+    Map<String, String> mGroups = new HashMap<>();
+    List<String> groupNames = new ArrayList<>();
+    boolean groupChat = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,30 +57,101 @@ public class AuthActivity extends AppCompatActivity {
         binding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        viewModel = new ViewModelProvider(this).get(GroupViewModel.class);
         setupChatClient();
 
+        setUpSpinner();
+        binding.spnGroups.setOnItemSelectedListener(this);
 
-        binding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.radio_group_chat){
-                    groupChat = true;
-                }else {
-                    groupChat = false;
+        binding.spnGroups.setVisibility(View.VISIBLE);
+        binding.radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radio_group_chat) {
+                groupChat = true;
+                binding.spnGroups.setVisibility(View.VISIBLE);
+                binding.btnManageGroups.setVisibility(View.VISIBLE);
+            } else {
+                binding.spnGroups.setVisibility(View.GONE);
+                binding.btnManageGroups.setVisibility(View.GONE);
+                groupChat = false;
 
-                }
             }
         });
 
         binding.btnCreateAccount.setOnClickListener(v -> {
-            try {
+            if (groupChat) {
+                if (binding.username.getText().toString().isEmpty() || binding.password.getText().toString().isEmpty()) {
+                    Toast.makeText(AuthActivity.this, "Please enter username and password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (selectedGroup == "Select a Group") {
+                    Toast.makeText(AuthActivity.this, "Please Select a group", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 signUp();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            } else {
+                if (binding.username.getText().toString().isEmpty() || binding.password.getText().toString().isEmpty()) {
+                    Toast.makeText(AuthActivity.this, "Please enter username and password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                signUp();
             }
+
         });
 
-        binding.btnLogin.setOnClickListener(v -> loginToAgoraChat());
+        binding.btnLogin.setOnClickListener(v -> {
+            if (groupChat) {
+                if (binding.username.getText().toString().isEmpty() || binding.password.getText().toString().isEmpty()) {
+                    Toast.makeText(AuthActivity.this, "Please enter username and password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (selectedGroup == "Select a Group") {
+                    Toast.makeText(AuthActivity.this, "Please Select a group", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                loginToAgoraChat();
+            } else {
+                if (binding.username.getText().toString().isEmpty() || binding.password.getText().toString().isEmpty()) {
+                    Toast.makeText(AuthActivity.this, "Please enter username and password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                loginToAgoraChat();
+            }
+
+
+        });
+
+        binding.btnManageGroups.setOnClickListener(v -> startActivity(new Intent(AuthActivity.this, GroupChatDashboard.class)));
+    }
+
+    private void setUpSpinner() {
+        viewModel.getAllGroups().observe(AuthActivity.this, new Observer<String>() {
+            @Override
+            public void onChanged(String string) {
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+
+                    JSONArray groups = jsonObject.getJSONArray("data");
+                    mGroups.clear();
+                    groupNames.clear();
+                    groupNames.add("Select a Group");
+
+                    for (int i = 0; i < groups.length(); i++) {
+                        JSONObject object = groups.getJSONObject(i);
+                        String groupId = object.getString("groupid");
+                        String groupName = object.getString("groupname");
+
+                        mGroups.put(groupName, groupId);
+                        groupNames.add(groupName);
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(AuthActivity.this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, groupNames);
+                    adapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
+                    binding.spnGroups.setAdapter(adapter);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
     private void loginToAgoraChat() {
@@ -80,7 +164,8 @@ public class AuthActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> Toast.makeText(AuthActivity.this, "Login Success", Toast.LENGTH_SHORT).show());
 
-                goToDestination(username,pw,groupChat);
+
+                goToDestination(username, pw, groupChat);
             }
 
             @Override
@@ -88,9 +173,10 @@ public class AuthActivity extends AppCompatActivity {
                 if (code == 200) {
                     String username = binding.username.getText().toString().trim();
                     String pw = binding.password.getText().toString().trim();
+
                     runOnUiThread(() -> Toast.makeText(AuthActivity.this, "Login Success", Toast.LENGTH_SHORT).show());
-                    goToDestination(username,pw,groupChat);
-                }else {
+                    goToDestination(username, pw, groupChat);
+                } else {
                     runOnUiThread(() -> Toast.makeText(AuthActivity.this, "Login failed", Toast.LENGTH_SHORT).show());
 
                 }
@@ -112,6 +198,7 @@ public class AuthActivity extends AppCompatActivity {
 
         chatClient.setDebugMode(true);
     }
+
     public void signUp() {
         String username = binding.username.getText().toString().trim();
         String pwd = binding.password.getText().toString().trim();
@@ -137,7 +224,7 @@ public class AuthActivity extends AppCompatActivity {
                 String responseInfo = response.content;
                 showToast(responseInfo);
                 if (code == 200) {
-                    goToDestination(username,pwd, groupChat);
+                    goToDestination(username, pwd, groupChat);
                 } else {
                     showToast(responseInfo);
                 }
@@ -148,14 +235,21 @@ public class AuthActivity extends AppCompatActivity {
         });
     }
 
-    public void goToDestination(String username,String pw, boolean isGroupChat){
-        if (isGroupChat){
+    public void goToDestination(String username, String pw, boolean isGroupChat) {
+
+
+        if (isGroupChat) {
             Intent intent = new Intent(AuthActivity.this, GroupChatActivity.class);
             intent.putExtra("username", username);
             intent.putExtra("pw", pw);
+
+
+            String groupId = mGroups.get(selectedGroup);
+
+            intent.putExtra("groupId", groupId);
             startActivity(intent);
             showToast("Signup Successfully!");
-        }else {
+        } else {
             Intent intent = new Intent(AuthActivity.this, One2OneChatActivity.class);
             intent.putExtra("username", username);
             intent.putExtra("pw", pw);
@@ -163,10 +257,22 @@ public class AuthActivity extends AppCompatActivity {
             showToast("Signup Successfully!");
         }
     }
+
     private void showToast(String text) {
         runOnUiThread(() ->
                 Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show());
 
         Log.d("MAIN", text);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        selectedGroup = groupNames.get(position);
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
