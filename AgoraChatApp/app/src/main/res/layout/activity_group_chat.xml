@@ -5,21 +5,18 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".chatgroup.using_restapi.GroupChatActivity">
+    tools:context=".groupchat.GroupChatActivity">
 
-    <TextView
-        android:id="@+id/group_name"
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:gravity="center_horizontal"
-        android:padding="8dp"
-        android:textStyle="bold"
-        android:text="Group Name"
-        android:textSize="24sp" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/green"
+        android:textAlignment="center"
+        app:navigationIcon="@drawable/baseline_arrow_back_24"
+        app:title="Group Name"
+        app:titleTextColor="@color/white" />
 
 
     <ScrollView
@@ -27,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/btnSendMessage"
-        android:layout_below="@id/group_name"
+        android:layout_below="@id/toolbar"
         android:background="#ECE5DD">
 
         <LinearLayout

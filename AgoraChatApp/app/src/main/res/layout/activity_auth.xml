@@ -54,15 +54,6 @@
         android:layout_marginTop="16dp"
         android:hint="Password" />
 
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/spn_groups"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:padding="8dp"
-        android:spinnerMode="dropdown"
-        android:text="Select User" />
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_create_account"
         android:layout_width="wrap_content"

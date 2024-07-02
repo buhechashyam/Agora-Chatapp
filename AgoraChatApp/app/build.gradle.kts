@@ -60,6 +60,8 @@ dependencies {
     // For AGP 7.4+
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
+    implementation ("androidx.room:room-runtime:2.6.1")
+    annotationProcessor ("androidx.room:room-compiler:2.6.1")
 
-
+    implementation ("com.google.code.gson:gson:2.11.0")
 }

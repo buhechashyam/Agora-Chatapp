@@ -1,5 +1,7 @@
-package com.example.agorachatapp.chatgroup.using_restapi;
+package com.example.agorachatapp.groupchat;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -56,8 +58,11 @@ public class GroupChatDashboard extends AppCompatActivity implements AdapterView
 
         viewModel = new ViewModelProvider(this).get(GroupViewModel.class);
 
-        username = getIntent().getStringExtra("username");
-        password = getIntent().getStringExtra("pw");
+
+        SharedPreferences sharedPreferences = getSharedPreferences("user-login", Context.MODE_PRIVATE);
+
+        username = sharedPreferences.getString("username","");
+        password = sharedPreferences.getString("pw","");
 
         joinUser(username, password);
 

@@ -3,7 +3,9 @@ package com.example.agorachatapp;
 import static android.os.AsyncTask.execute;
 import static io.agora.cloud.HttpClientManager.Method_POST;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,10 +18,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.agorachatapp.chatgroup.using_restapi.GroupChatActivity;
-import com.example.agorachatapp.chatgroup.using_restapi.GroupChatDashboard;
+import com.example.agorachatapp.groupchat.GroupChatActivity;
+import com.example.agorachatapp.groupchat.GroupChatDashboard;
 import com.example.agorachatapp.databinding.ActivityAuthBinding;
-import com.example.agorachatapp.one2onechat.using_restapi.One2OneChatActivity;
+import com.example.agorachatapp.groupchat.GroupHomeActivity;
+import com.example.agorachatapp.one2onechat.HomeActivity;
+import com.example.agorachatapp.one2onechat.One2OneChatActivity;
 import com.example.agorachatapp.viewmodel.GroupViewModel;
 
 import org.json.JSONArray;
@@ -42,7 +46,7 @@ public class AuthActivity extends AppCompatActivity implements AdapterView.OnIte
     ActivityAuthBinding binding;
     private String appKey = "611166664#1353835";
     ChatClient chatClient;
-    String appToken = "007eJxTYDhU/qVp47H/Un1bWrWK8t3kdN5eT6gVOVv4eSF7uOLRr6oKDMapFhbGyUlJpkZmFiamSWmWBomGaYnJaYmJKYbJaakpe5Or0hoCGRkWdBoxMzKwMjAyMDGA+AwMAAxHH64=";
+    String appToken = "007eJxTYDCd7rFSNWB3X7AJr4JB4IzcAxcjt1mF73sYOmNze4jr2wUKDMapFhbGyUlJpkZmFiamSWmWBomGaYnJaYmJKYbJaakpxnOb0xoCGRkazDyZGRlYGRgZmBhAfAYGAFKEHVc=";
     String REGISTER_URL = "https://a61.chat.agora.io/611166664/1353835/users";
     GroupViewModel viewModel;
     String selectedGroup;
@@ -61,21 +65,6 @@ public class AuthActivity extends AppCompatActivity implements AdapterView.OnIte
         setupChatClient();
 
         setUpSpinner();
-        binding.spnGroups.setOnItemSelectedListener(this);
-
-        binding.spnGroups.setVisibility(View.VISIBLE);
-        binding.radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.radio_group_chat) {
-                groupChat = true;
-                binding.spnGroups.setVisibility(View.VISIBLE);
-                binding.btnManageGroups.setVisibility(View.VISIBLE);
-            } else {
-                binding.spnGroups.setVisibility(View.GONE);
-                binding.btnManageGroups.setVisibility(View.GONE);
-                groupChat = false;
-
-            }
-        });
 
         binding.btnCreateAccount.setOnClickListener(v -> {
             if (groupChat) {
@@ -146,7 +135,6 @@ public class AuthActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(AuthActivity.this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, groupNames);
                     adapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
-                    binding.spnGroups.setAdapter(adapter);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -161,7 +149,7 @@ public class AuthActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onSuccess() {
                 String username = binding.username.getText().toString().trim();
                 String pw = binding.password.getText().toString().trim();
-
+                saveData(username,pw);
                 runOnUiThread(() -> Toast.makeText(AuthActivity.this, "Login Success", Toast.LENGTH_SHORT).show());
 
 
@@ -173,7 +161,7 @@ public class AuthActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (code == 200) {
                     String username = binding.username.getText().toString().trim();
                     String pw = binding.password.getText().toString().trim();
-
+                    saveData(username,pw);
                     runOnUiThread(() -> Toast.makeText(AuthActivity.this, "Login Success", Toast.LENGTH_SHORT).show());
                     goToDestination(username, pw, groupChat);
                 } else {
@@ -224,6 +212,7 @@ public class AuthActivity extends AppCompatActivity implements AdapterView.OnIte
                 String responseInfo = response.content;
                 showToast(responseInfo);
                 if (code == 200) {
+                    saveData(username,pwd);
                     goToDestination(username, pwd, groupChat);
                 } else {
                     showToast(responseInfo);
@@ -239,7 +228,7 @@ public class AuthActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         if (isGroupChat) {
-            Intent intent = new Intent(AuthActivity.this, GroupChatActivity.class);
+            Intent intent = new Intent(AuthActivity.this, GroupHomeActivity.class);
             intent.putExtra("username", username);
             intent.putExtra("pw", pw);
 
@@ -250,7 +239,7 @@ public class AuthActivity extends AppCompatActivity implements AdapterView.OnIte
             startActivity(intent);
             showToast("Signup Successfully!");
         } else {
-            Intent intent = new Intent(AuthActivity.this, One2OneChatActivity.class);
+            Intent intent = new Intent(AuthActivity.this, HomeActivity.class);
             intent.putExtra("username", username);
             intent.putExtra("pw", pw);
             startActivity(intent);
@@ -274,5 +263,15 @@ public class AuthActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private void saveData(String username, String pw) {
+        SharedPreferences sharedPreferences = getSharedPreferences("user-login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString("username",username);
+        editor.putString("pw",pw);
+        editor.apply();
+        editor.commit();
     }
 }

@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".one2onechat.using_restapi.One2OneChatActivity">
+    tools:context=".one2onechat.One2OneChatActivity">
 
 
     <com.google.android.material.textfield.TextInputLayout

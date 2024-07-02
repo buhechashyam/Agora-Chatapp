@@ -1,6 +1,11 @@
-package com.example.agorachatapp.chatgroup.using_restapi;
+package com.example.agorachatapp.groupchat;
+
+import static android.os.AsyncTask.execute;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.agorachatapp.R;
 import com.example.agorachatapp.databinding.ActivityGroupChatBinding;
-import com.example.agorachatapp.databinding.ActivityGroupChatsBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,9 +27,12 @@ import java.util.List;
 import io.agora.CallBack;
 import io.agora.ConnectionListener;
 import io.agora.MessageListener;
+import io.agora.ValueCallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatOptions;
+import io.agora.chat.Conversation;
+import io.agora.chat.CursorResult;
 import io.agora.chat.TextMessageBody;
 
 public class GroupChatActivity extends AppCompatActivity {
@@ -34,6 +41,7 @@ public class GroupChatActivity extends AppCompatActivity {
     String appKey = "611166664#1353835";
     String username = "";
     String groupId = "";
+    String groupName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +53,55 @@ public class GroupChatActivity extends AppCompatActivity {
         setUpClient();
         setUpListener();
 
-        username = getIntent().getStringExtra("username");
-        groupId = getIntent().getStringExtra("groupId");
+        SharedPreferences sharedPreferences = getSharedPreferences("user-login", Context.MODE_PRIVATE);
 
-        String groupName = ChatClient.getInstance().groupManager().getGroup(groupId).getGroupName();
-        binding.groupName.setText(groupName);
+        username = sharedPreferences.getString("username","");
 
-        binding.btnSendMessage.setOnClickListener(new View.OnClickListener() {
+        groupId = getIntent().getStringExtra("group-id");
+        groupName = getIntent().getStringExtra("group-name");
+
+        binding.toolbar.setTitle(groupName);
+        fetchGroupConversionHistory(groupId);
+
+        binding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(GroupChatActivity.this,GroupHomeActivity.class));
+                finish();
+            }
+        });
+        binding.btnSendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
                 sendMessageToGroup();
+            }
+        });
+    }
+
+    private void fetchGroupConversionHistory(String groupId) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                ChatClient.getInstance().chatManager().asyncFetchHistoryMessage(groupId, Conversation.ConversationType.GroupChat, 40, null, new ValueCallBack<CursorResult<ChatMessage>>() {
+                    @Override
+                    public void onSuccess(CursorResult<ChatMessage> values) {
+                        List<ChatMessage> messages = values.getData();
+                        for (ChatMessage message : messages) {
+                            if (message.getFrom().equals(username)){
+                                runOnUiThread(() -> displayMessage(((TextMessageBody) message.getBody()).getMessage(), convertToTime(message.getMsgTime()),username, true));
+                            }else {
+                                runOnUiThread(() -> displayMessage(((TextMessageBody) message.getBody()).getMessage(), convertToTime(message.getMsgTime()), message.getFrom(), false));
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(int error, String errorMsg) {
+                        showToast("History not found");
+                    }
+                });
+
             }
         });
     }
@@ -74,13 +121,10 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onSuccess() {
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        displayMessage(msg,convertToTime(chatMessage.getMsgTime()),username,true);
-                        binding.etMessageText.setText("");
-                        showToast("Send Message");
-                    }
+                runOnUiThread(() -> {
+                    displayMessage(msg,convertToTime(chatMessage.getMsgTime()),username,true);
+                    binding.etMessageText.setText("");
+                    showToast("Send Message");
                 });
 
             }
@@ -180,4 +224,5 @@ public class GroupChatActivity extends AppCompatActivity {
 
         return date;
     }
+
 }

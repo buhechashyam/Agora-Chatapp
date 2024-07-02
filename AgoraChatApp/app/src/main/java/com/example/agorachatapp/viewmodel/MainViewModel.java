@@ -118,7 +118,6 @@ public class MainViewModel extends AndroidViewModel {
                         _mReceivedMessage.postValue(httpResponse.content);
                     }else {
                         _mReceivedMessage.postValue("Error");
-
                     }
 
                 } catch (IOException e) {
@@ -126,9 +125,6 @@ public class MainViewModel extends AndroidViewModel {
                 }
             }
         });
-
-
-
         return mReceivedMessage;
     }
 

@@ -30,26 +30,23 @@
         android:theme="@style/Theme.AgoraChatApp"
         tools:targetApi="31">
         <activity
-            android:name=".chatgroup.using_restapi.GroupChatDashboard"
-            android:parentActivityName=".AuthActivity"
+            android:name=".groupchat.GroupHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".chatgroup.using_dashboard.ChatGroupActivity"
+            android:name=".one2onechat.One2OneChatActivity"
             android:exported="false" />
         <activity
-            android:name=".chatgroup.using_dashboard.GroupChatActivity"
+            android:name=".groupchat.GroupChatDashboard"
+            android:exported="false"
+            android:parentActivityName=".AuthActivity" />
+        <activity
+            android:name=".groupchat.GroupChatActivity"
             android:exported="false" />
         <activity
-            android:name=".chatgroup.using_restapi.GroupChatActivity"
+            android:name=".one2onechat.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".one2onechat.using_restapi.One2OneChatActivity"
-            android:exported="false" />
-        <activity
-            android:name=".one2onechat.using_dashboard.MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".one2onechat.using_dashboard.ChatActivity"
+            android:name=".one2onechat.ChatActivity"
             android:exported="false" />
         <activity
             android:name=".AuthActivity"
